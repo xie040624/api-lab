@@ -1,0 +1,13 @@
+- Step 0.1, the number of pizza names: 18
+- Step 0.2, status 200, Content-Type: application/json และ cookie AWSALB
+- Step 0.3, No token: 401, With token: {"tools":["Knife","Pizza cutter","Scissors"]}
+- Step 0.4, Pizza name: "A Giant Carbonara"
+- excludedTools count 0: 200 with pizza JSON
+- excludedTools count 1: 200 with pizza JSON
+- excludedTools count 2: 200 with pizza JSON
+- excludedTools count 3: 500 with an empty body via curl; product requirement is 400 with an error JSON, so the dedicated pytest is marked xfail
+- Ratings create discovery: stars 0/6/missing -> 400, `number of stars must be between 1 and 5 (inclusive)`
+- Ratings create discovery: stars 3 -> 201; stars 3.5 -> 400, `json: cannot unmarshal number 3.5 into Go struct field Rating.stars of type int`
+- Ratings create discovery: stars "3" -> 400, `json: cannot unmarshal string into Go struct field Rating.stars of type int`
+- Ratings create discovery: pizza 999999999 -> 400, `pizza ID 999999999 not found`; missing/malformed/short token -> 401, `authentication failed`
+- Other user rating access: GET 404, PUT 400, DELETE 400; owner could still read the unchanged rating
