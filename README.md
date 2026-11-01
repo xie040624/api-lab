@@ -2,11 +2,11 @@
 
 ## Ratings input domain model
 
-| Characteristic | Blocks / example inputs |
+| Characteristic | Blocks and test covering each block |
 |---|---|
-| จำนวนดาว | ต่ำกว่า 1: `0` / 1–5: `3` / มากกว่า 5: `6` |
-| ชนิดของดาว | จำนวนเต็ม: `3` / ทศนิยม: `3.5` / ข้อความ: `"3"` / ไม่มี field: ไม่มี `stars` |
-| Pizza | มีอยู่: `pizza_id` จาก fixture / ไม่มีอยู่: `999999999` |
-| Token | token ของ user / ไม่มี header / รูปแบบผิด `auth` / token สั้น `token abc` |
+| C1: stars value | below 1: `0` and above 5: `6` -> `test_stars_out_of_range`; base 1-5: `3` -> `test_base_choice_is_saved` |
+| C2: stars type | whole number: `3` -> `test_base_choice_is_saved`; decimal: `3.5`, text: `"3"`, missing: no `stars` -> `test_stars_type` |
+| C3: pizza | exists: fixture `pizza_id` -> `test_base_choice_is_saved`; missing: `999999999` -> `test_missing_pizza_is_refused` |
+| C4: token | user's own: `auth` -> `test_base_choice_is_saved`; none and wrong length: `test_invalid_token_is_refused` |
 
-Tests cover the base case and each block in `test_create_rating.py`, update boundaries in `test_update_rating.py`, and cross-user ownership in `test_rating_owner.py`.
+The tests use the base choice of 3 whole-number stars, an existing pizza, and the logged-in user's token. Each non-base test changes one characteristic while keeping the other inputs at their base choices.

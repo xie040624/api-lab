@@ -21,7 +21,10 @@ def test_excluded_tool_count(api, auth, excluded):
     assert res.json()["pizza"]["tool"] not in excluded
 
 
-@pytest.mark.xfail(reason="API returns 500 with an empty body; product requirement is 400 with error JSON")
+@pytest.mark.xfail(
+    reason="Defect 1: excluding all tools returns 500 with an empty body instead of 400 with a JSON error",
+    strict=True,
+)
 def test_excluding_all_tools_returns_error(api, auth):
     res = api.post(
         "/api/pizza",
